@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from item.models import Item, Category
 # Create your views here.
@@ -17,8 +17,19 @@ def contact(request):
     return render(request, 'core/contact.html')
 
 def signup(request):
-   form = SignupForm()
+   
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        
+        if form.is_valid():
+            form.save()
+            # Redirect to a success page or login page after successful signup
+            return redirect('/login/')
+    else:
+        form = SignupForm()
+    # If the request method is GET, create an empty form instance
+   
 
-   return render(request, 'core/signup.html', {
+    return render(request, 'core/signup.html', {
        'form': form,
    })
